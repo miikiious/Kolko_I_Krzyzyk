@@ -10,6 +10,7 @@ def draw_check(current_board, draw: bool = True):
     return draw
 
 
+
 def wstaw_znak(current_board: list, koordynaty: str, znak: str):
     index_dict = {"a": 0, "b": 1, "c": 2}
     row_psition = koordynaty[1:]
