@@ -35,10 +35,18 @@ def wstaw_znak(current_board: list, koordynaty: str, znak: str):
 
 
 def ai(current_board):
+    row1 = current_board[0]
+    row2 = current_board[1]
+    row3 = current_board[2]
+    column1 = [row1[0], row2[0], row3[0]]
+    column2 = [row1[1], row2[1], row3[1]]
+    column3 = [row1[2], row2[2], row3[2]]
+    diagonal1 = [row1[0], row2[1], row3[2]]
+    diagonal2 = [row1[2], row2[1], row3[0]]
     return current_board
 
 
-# ma zwracać pozycję którą AI wpisuje/zmodyfikowanego current board
+# ma zwracać zmodyfikowanego current board
 
 def win_check(current_board, endgame: bool = False):
     # sprawdzanie po wierszach
@@ -122,11 +130,11 @@ while endgame != True:
     print_board(current_board)
     endgame = win_check(current_board, endgame)
     draw = draw_check(current_board)
-
-    print(endgame, draw)
-
     if endgame is True:
-        print("Gratulacje Wygrałeś!!!")
+        print("Gratulacje, Wygrałeś!!!")
+        break
+    elif draw is True:
+        print("Remis")
         break
     else:
         current_board = ai(current_board)
@@ -134,6 +142,8 @@ while endgame != True:
         endgame = win_check(current_board)
         if endgame is True:
             print("Trudno, tym razem ci się nie udało")
-
-endgame = win_check(current_board, endgame)
-print(endgame)
+            break
+        elif draw is True:
+            print("Remis")
+            break
+print(endgame, draw)
