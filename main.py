@@ -34,7 +34,8 @@ def wstaw_znak(current_board: list, koordynaty: str, znak: str):
     return current_board
 
 
-def ai(current_board):
+def ai(current_board: list, znak_ai: str, znak: str):
+    podstawienie = False
     row1 = current_board[0]
     row2 = current_board[1]
     row3 = current_board[2]
@@ -43,13 +44,57 @@ def ai(current_board):
     column3 = [row1[2], row2[2], row3[2]]
     diagonal1 = [row1[0], row2[1], row3[2]]
     diagonal2 = [row1[2], row2[1], row3[0]]
+    list = [row1, row2, row3, column1, column2, column3, diagonal1, diagonal2]  # lista wysztkich możliwości wygranej
+    for element in list: #Nie bangla, przerobić
+        if " " in element:
+            ile_znak_ai = element.count(znak_ai)
+            ile_znak = element.count(znak)
+            if ile_znak_ai == 2:
+                element[element.index(" ")] = znak_ai
+                podstawienie = True
+                break
+            elif ile_znak == 2:
+                element[element.index(" ")] = znak_ai
+                podstawienie = True
+                break
+    list = row1 + row2 + row3
+    while podstawienie is not True:
+        choice = random.randint(1, 23)
+        if choice in (0, 1):
+            i = 0
+        elif choice == 3:
+            i = 1
+        elif choice in (4, 5):
+            i = 2
+        elif choice == 6:
+            i = 3
+        elif choice in range(7, 17):
+            i = 4
+        elif choice == 17:
+            i = 5
+        elif choice in (18, 19):
+            i = 6
+        elif choice == 20:
+            i = 7
+        else:
+            i = 8
+        if list[i] == " ":
+            list[i] = znak_ai
+            podstawienie=True
+    row1 = list[:3]
+    row2 = list[3:6]
+    row3 = list[6:]
+    current_board = [row1, row2, row3]
     return current_board
 
 
 # ma zwracać zmodyfikowanego current board
 
 def win_check(current_board, endgame: bool = False):
-    # sprawdzanie po wierszach
+    row1 = current_board[0]
+    row2 = current_board[1]
+    row3 = current_board[2]
+    # weryfikacja po wierszach
     werifikator = row1[0] * 3
     werfikowana = row1[0] + row1[1] + row1[2]
     if werfikowana == werifikator and werifikator != "   ":
@@ -109,18 +154,22 @@ draw = False
 endgame = False
 krzyzyk = "x"
 kolko = "o"
-row1 = ["x", " ", "x"]
-row2 = ["o", "o", "x"]
-row3 = ["x", "x", "o"]
-current_board = [row1, row2, row3]
 znak = random.choice([krzyzyk, kolko])
+if znak == krzyzyk:
+    znak_ai = kolko
+else:
+    znak_ai = krzyzyk
+row1 = ["x", " ", " "]
+row2 = [" ", " ", " "]
+row3 = [" ", " ", "o"]
+current_board = [row1, row2, row3]
 zaczyna = random.randint(0, 1)
 print_board(current_board)
 print(f'Tym razem grasz: {znak}')
 
 if zaczyna < 1:  # sprawdza kto zaczyna, graczy czy komp
     print('Pierwszy ruch robi AI')
-    current_board = ai(current_board)
+    current_board = ai(current_board, znak_ai, znak)
     print_board(current_board)
     endgame = win_check(current_board, endgame)
     draw = draw_check(current_board)
@@ -137,7 +186,7 @@ while endgame != True:
         print("Remis")
         break
     else:
-        current_board = ai(current_board)
+        current_board = ai(current_board, znak_ai, znak)
         print_board(current_board)
         endgame = win_check(current_board)
         if endgame is True:
